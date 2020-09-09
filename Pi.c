@@ -15,13 +15,15 @@ void main ()
 		int id = omp_get_thread_num();
 		int nthrds = omp_get_num_threads();
 
+		if(id == 0) nthreads = omp_get_num_threads();
+
 		for (i=id, sum[id]=0.0;i< num_steps; i=i+nthrds) {
 			x = (i+0.5)*step;
 			sum[id] += 4.0/(1.0+x*x);
 		}
 	}
 	
-	for(i=0, pi=0.0;i<8;i++)pi += sum[i];
+	for(i=0, pi=0.0;i<nthreads;i++)pi += sum[i];
 	pi *= step;
 	printf("pi=%f\n",pi); 
 }
